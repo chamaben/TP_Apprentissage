@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 from scipy.io import arff
 
-path = '../../artificial/'
+path = '../artificial/'
 databrut = arff.loadarff(open(path+"xclara.arff",'r'))
 data =  [[x[0],x[1]] for x in databrut[0]]
 
