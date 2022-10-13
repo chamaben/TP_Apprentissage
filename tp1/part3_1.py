@@ -63,7 +63,7 @@ def search_dist(method,d_start,d_end, databrut, k_ref) :
         if coefs[i]==min(coefs):
             print(method, " silhouette Mectric la plus proche de 1 : ",min(coefs), ", atteint pour nb de cluster = ",cluster_dist[i]," distance ",dist[i],"k_ref = ", k_ref)
 
-def search_cluster(method,databrut, k_ref) :
+def search_cluster_agglomeratif(method,databrut, k_ref) :
     datanp =  [[x[0],x[1]] for x in databrut[0]]
     
     f0 = [f[0] for f in datanp]
@@ -72,6 +72,7 @@ def search_cluster(method,databrut, k_ref) :
     # Le code ci-dessous permet d’afficher un dendrogramme (il y a d’autres possibilités ...) avec la méthode d’agglomération de clusters single
 
     # Donnees dans datanp 
+    tps1 = time.time() 
     print ("Dendrogramme ", method," donnees initiales ") 
 
     linked_mat = shc.linkage(datanp , method) 
@@ -86,10 +87,10 @@ def search_cluster(method,databrut, k_ref) :
     for k in range(2,15):
         
     
-        tps1=time.time()
+        #tps1=time.time()
         model= cluster.AgglomerativeClustering(linkage=method, n_clusters=k)
         model= model.fit(datanp)
-        tps2=time.time()
+        #tps2=time.time()
 
         labels= model.labels_
         kres= model.n_clusters_
@@ -110,28 +111,39 @@ def search_cluster(method,databrut, k_ref) :
     
     for i in range(len(coefs)) :
         if coefs[i]==min(coefs):
+            nb_cluster = i
             print(method, " silhouette Mectric la plus proche de 1 : ",min(coefs), ", atteint pour nb de cluster = ",i,"k_ref = ", k_ref)
 
+    tps2 = time.time() 
+    return nb_cluster,round((tps2 - tps1)*1000,2)
 
-path = '../artificial/'
-databrut = arff.loadarff(open(path+"2d-10c.arff",'r'))
-databrut2 = arff.loadarff(open(path+"xclara.arff",'r'))
-databrut3 = arff.loadarff(open(path+"sizes4.arff",'r'))
-#dist varie
-# search_dist("average",10,30,databrut, 9)
-# search_dist("average",30,60,databrut2, 3)
-# search_dist("average",4,9,databrut3,4)
-
-#cluster varie
-# search_cluster("average",databrut, 9)
-# search_cluster("average",databrut2, 3)
-# search_cluster("average",databrut3, 4)
-
-#method varie
-search_dist("single",1,10,databrut2,3) 
-search_dist("average",30,60,databrut2,3)
-search_dist("complete",30,60,databrut2,3)
-search_dist("ward",30,60,databrut2,3)
-
-
-
+def main():
+    path = '../artificial/'
+    databrut = arff.loadarff(open(path+"2d-10c.arff",'r'))
+    databrut2 = arff.loadarff(open(path+"xclara.arff",'r'))
+    databrut3 = arff.loadarff(open(path+"sizes4.arff",'r'))
+    #dist varie
+    # search_dist("average",10,30,databrut, 9)
+    # search_dist("average",30,60,databrut2, 3)
+    # search_dist("average",4,9,databrut3,4)
+    
+    #cluster varie
+    # search_cluster_agglomeratif("average",databrut, 9)
+    # search_cluster_agglomeratif("average",databrut2, 3)
+    # search_cluster_agglomeratif("average",databrut3, 4)
+    
+    #method varie
+    #search_dist("single",1,10,databrut2,3) 
+    #search_dist("average",30,60,databrut2,3)
+    #search_dist("complete",60,90,databrut2,3)
+    #search_dist("ward",500,600,databrut2,3)
+    
+    
+    ## 3.3
+    databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+    databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
+    search_cluster_agglomeratif("average",databrut4, 3)
+    search_cluster_agglomeratif("average",databrut5, 3)
+    #sur ces deux  jeu de données on remarque QU'ON NE TROUVE PAS LE BON NOMBRE DE CLUSTER AVEC LA MÉTHODE 
+        
+#main()

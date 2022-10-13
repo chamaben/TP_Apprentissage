@@ -18,7 +18,7 @@ from sklearn.metrics.cluster import rand_score
 
 
 
-def search_cluster(metric, databrut, k_ref) :
+def search_cluster_kmedoids(metric, databrut, k_ref) :
     datanp =  [[x[0],x[1]] for x in databrut[0]]
     
     f0 = [f[0] for f in datanp]
@@ -27,7 +27,7 @@ def search_cluster(metric, databrut, k_ref) :
     plt.show()
     
     
-    
+    tps1 = time.time() 
     if metric == "silhouette" :
         coefs = [99.,99.]
         coefs_man = [99.,99.]
@@ -36,10 +36,10 @@ def search_cluster(metric, databrut, k_ref) :
         coefs = [99.,99.]
         
     for k in range(2,15):
-        tps1 = time . time ()
+        #tps1 = time . time ()
         distmatrix = euclidean_distances ( datanp )
         fp = kmedoids . fasterpam ( distmatrix , k )
-        tps2 = time . time ()
+        #tps2 = time . time ()
         iter_kmed = fp . n_iter
         labels= fp . labels
         
@@ -62,7 +62,7 @@ def search_cluster(metric, databrut, k_ref) :
         plt.scatter(f0, f1, c=labels, s=8)
         plt.title("Donnees apres clusturing Kmedoids")
         plt.show()
-        print("nb clusters=", k, " , nb iter =" , iter_kmed, ", ...... runtime= ", round((tps2 -tps1)*1000,2),"ms" )
+        #print("nb clusters=", k, " , nb iter =" , iter_kmed, ", ...... runtime= ", round((tps2 -tps1)*1000,2),"ms" )
 
         
     print(coefs)
@@ -78,25 +78,33 @@ def search_cluster(metric, databrut, k_ref) :
         
         if metric == "silhouette" :
             if coefs[i]==min(coefs):
+                nb_cluster = i
                 print("silhouette Mectric la plus proche de 1 : ",min(coefs), ", atteint pour nb de cluster = ",i, "k_ref = ", k_ref)
           
         elif metric == "db" :
             if coefs[i]==min(coefs):
+                nb_cluster = i
                 print("db Minimum de notre mectric : ",min(coefs), ", atteint pour nb de cluster = ",i, "k_ref = ", k_ref)
    
     #fait varier k en calculant à chaque fois avec les métriques d'évaluation, si on a une bonne valeur alors on a le bon nb de clusters (k)
     # a refaire sur pls jeu de données
+    tps2 = time.time() 
+    
+    return nb_cluster,round((tps2 - tps1)*1000,2)
 
-path = '../artificial/'
-databrut = arff.loadarff(open(path+"2d-10c.arff",'r'))
-databrut2 = arff.loadarff(open(path+"xclara.arff",'r'))
-databrut3 = arff.loadarff(open(path+"sizes4.arff",'r'))
-
-search_cluster("silhouette",databrut, 9)
-search_cluster("db",databrut, 9)
-search_cluster("silhouette",databrut2, 3)
-search_cluster("db",databrut2, 3)
-search_cluster("silhouette",databrut3,4)
-search_cluster("db",databrut3,4)
-
-# 2.4 : silhouette sur kmedoids ne fait pas les bons calculs 
+def main ():
+    path = '../artificial/'
+    databrut = arff.loadarff(open(path+"2d-10c.arff",'r'))
+    databrut2 = arff.loadarff(open(path+"xclara.arff",'r'))
+    databrut3 = arff.loadarff(open(path+"sizes4.arff",'r'))
+    
+    search_cluster_kmedoids("silhouette",databrut, 9)
+    search_cluster_kmedoids("db",databrut, 9)
+    search_cluster_kmedoids("silhouette",databrut2, 3)
+    search_cluster_kmedoids("db",databrut2, 3)
+    search_cluster_kmedoids("silhouette",databrut3,4)
+    search_cluster_kmedoids("db",databrut3,4)
+    
+    # 2.4 : silhouette sur kmedoids ne fait pas les bons calculs 
+    
+#main()
