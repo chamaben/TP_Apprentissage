@@ -7,49 +7,9 @@ import time
 from sklearn import cluster, metrics
 from scipy.io import arff
 import hdbscan
+from sklearn.metrics.cluster import rand_score
 
 path = '../artificial/'
-databrut2 = arff.loadarff(open(path+"xclara.arff",'r'))
-
-datanp =  [[x[0],x[1]] for x in databrut2[0]]
-    
-f0 = [f[0] for f in datanp]
-f1 = [f[1] for f in datanp]
-plt.scatter(f0 , f1,s=8) 
-plt.show()
-
-coefs = [99.,99.]
-
-# # Distances k plus proches voisins
-# # Donnees dans X
-# k=3
-# neigh = NearestNeighbors ( n_neighbors =k )
-# neigh . fit ( datanp )
-# distances , indices = neigh . kneighbors ( datanp )
-# # retirer le point " origine "
-# newDistances = np . asarray ([np . average ( distances [i][1:]) for i in range (0 ,
-# distances . shape [0])])
-# trie = np . sort ( newDistances )
-
-# ##"90-95% des observations qui doivent avoir au moins un voisin dans leur ε-voisinage."
-# ##"ε de tel sorte que 90% des observations aient une distance au proche voisin inférieure à ε"
-# e= trie[int(len(trie)*0.95)]
-# print(e)
-# plt . title (" Plus proches voisins (3)")
-# plt . plot ( trie ) ;
-# plt . show ()
-
-
-# tps1 = time.time() 
-# model = DBSCAN(eps=e, min_samples=5)
-# model.fit(datanp) 
-
-# tps2 = time.time() 
-# labels = model.labels_ 
-# print(labels)
-# plt.scatter(f0, f1, c=labels, s=8)
-# plt.title("Donnees apres clusturing")
-# plt.show()
 
 
 
@@ -64,7 +24,7 @@ def search_cluster(databrut, k_ref) :
     coefs = [99.,99.]
     e_value = [0,0]
 
-        
+    print(" Méthode DBSCAN selon k_ref") 
     for n in range(2,10):
         # Distances k plus proches voisins
         # Donnees dans X
@@ -81,7 +41,8 @@ def search_cluster(databrut, k_ref) :
         ##"ε de tel sorte que 90% des observations aient une distance au proche voisin inférieure à ε"
         e= trie[int(len(trie)*0.95)]
         e_value.append(e)
-        print(e)
+        
+        print("eps=: " + e)
         plt . title (" Plus proches voisins ")
         plt . plot ( trie ) ;
         plt . show ()
@@ -99,7 +60,7 @@ def search_cluster(databrut, k_ref) :
         
         coefs.append(abs(metrics.silhouette_score(datanp, labels)-1)) 
         
-
+    print("Coefs de la metric silhouette selon le k_ref")
     print(coefs)
     plt.plot(coefs)
     plt.show()
@@ -109,10 +70,9 @@ def search_cluster(databrut, k_ref) :
             e_final = e_value[i]
             print(" silhouette Mectric la plus proche de 1 : ",min(coefs), ", atteint pour eps = ",e_value[i],"k_ref = ", k_ref)
 
-    print("test difference min samples")
     
+    print(" Méthode DBSCAN selon min_sample") 
     samples_value = [0,0]
-    
     coefs = [99.,99.]
     
     for m in range(2,10):
@@ -131,7 +91,7 @@ def search_cluster(databrut, k_ref) :
         
         coefs.append(abs(metrics.silhouette_score(datanp, labels)-1)) 
         
-
+    print("Coefs de la metric Silhouette selon les min_sample")
     print(coefs)
     print(samples_value)
     plt.plot(coefs)
@@ -141,6 +101,7 @@ def search_cluster(databrut, k_ref) :
         if coefs[i]==min(coefs):
             print(" silhouette Mectric la plus proche de 1 : ",min(coefs), ", atteint pour min_samples = ",samples_value[i],"k_ref = ", k_ref)
 
+    
 
 def search_cluster_v2(databrut, k_ref) :
     datanp =  [[x[0],x[1]] for x in databrut[0]]
@@ -156,7 +117,7 @@ def search_cluster_v2(databrut, k_ref) :
     min_e = 99.
     min_s = 99.
 
-        
+    
     for n in range(2,10):
         # Distances k plus proches voisins
         # Donnees dans X
@@ -173,15 +134,17 @@ def search_cluster_v2(databrut, k_ref) :
         ##"90-95% des observations qui doivent avoir au moins un voisin dans leur ε-voisinage."
         ##"ε de tel sorte que 90% des observations aient une distance au proche voisin inférieure à ε"
         e= trie[int(len(trie)*0.95)]
-
         print(e)
         plt . title (" Plus proches voisins ")
         plt . plot ( trie ) ;
         plt . show ()
         
+        
         samples_value = [0,0]
         
         for m in range(2,10):
+            
+            #print("DBSCAN pour k_ref= "+n+ " et min_sample= "+m+ " :")
         
             tps1 = time.time() 
             samples_value.append(m)
@@ -198,8 +161,9 @@ def search_cluster_v2(databrut, k_ref) :
             coefs.append(abs(metrics.silhouette_score(datanp, labels)-1)) 
         
 
-        print(coefs)
-        plt.plot(coefs)
+        print(coefs[2:])
+        # ne pas représenter les 2 premières valeures car elles faussent le graph
+        plt.plot(coefs[2:])
         plt.show()
         
         for i in range(len(coefs)) :
@@ -218,6 +182,8 @@ def search_cluster_v2(databrut, k_ref) :
     plt.scatter(f0, f1, c=labels, s=8)
     plt.title("Donnees apres clusturing final")
     plt.show()
+    
+    return(labels)
     
 
 def cluster_hdbscan (databrut,k_ref):
@@ -239,23 +205,33 @@ def cluster_hdbscan (databrut,k_ref):
     plt.title("Donnees apres clusturing")
     plt.show()
     
+    return(labels)
+    
+# comparer sur des données de forme quelconques ou bruitées
+# silhouette ne va pas marcher sur ces données
+# comparer avec les plot
 
 #search_cluster_v2(databrut2, 3)
 
-
-#databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
-databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
-#search_cluster_v2(databrut4, 3)
-search_cluster_v2(databrut5, 3)
+print("Méthode DBSCAN")
+databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+# databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
+labels_dbscan= search_cluster_v2(databrut4, 3)
+# search_cluster_v2(databrut5, 3)
+# search_cluster_v2(databrut5, 3)
 
 
 ## 4.2
-# databrut4 = arff.loadarff(open(path+"disk-4600n.arff",'r'))
+#databrut4 = arff.loadarff(open(path+"disk-4600n.arff",'r'))
 # databrut5 = arff.loadarff(open(path+"zelnik3.arff",'r'))
-# search_cluster_v2(databrut4, 2)
-# search_cluster_v2(databrut5, 3)
+#search_cluster_v2(databrut4, 2)
+#search_cluster_v2(databrut5, 3)
 #sur ces deux  jeu de données on remarqueU'ON NE TROUVE PAS LE BON NOMBRE DE CLUSTER AVEC LA MÉTHODE 
-   
-# databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
-# cluster_hdbscan(databrut4, 3) 
+
+print("----------------------------------")
+
+#databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+labels_hdbscan= cluster_hdbscan(databrut4, 3) 
+
+print("rand_score entre la méthode DBSCAN et la méthode HDBSCAN",rand_score(labels_dbscan, labels_hdbscan))
 
