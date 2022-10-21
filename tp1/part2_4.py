@@ -33,7 +33,7 @@ def search_cluster_kmedoids(search_type,metric, databrut, k_ref) :
         
     saved_labels =[[],[]]
     
-    for k in range(2,15):
+    for k in range(2,25):
        
         if search_type == "euclidian":
             ##labels avec la distance euclidienne
@@ -86,7 +86,7 @@ def search_cluster_kmedoids(search_type,metric, databrut, k_ref) :
     
     plt.scatter(f0 , f1, c=saved_labels[nb_cluster] , s=8)
     
-    plt.title("Donnees apres clustering Kmedoids , search type : "+search_type) 
+    plt.title("Donnees apres clustering Kmedoids , search type : "+search_type+ " avec k="+str(nb_cluster)) 
     plt.show()
     
     

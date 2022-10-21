@@ -26,7 +26,7 @@ def search_cluster_kmeans(metric, databrut, k_ref) :
         
     saved_labels =[[],[]]
     
-    for k in range(2,15):
+    for k in range(2,25):
         model = cluster.KMeans(n_clusters=k, init='k-means++') 
         model.fit(datanp) 
         labels = model.labels_ 
@@ -72,7 +72,7 @@ def search_cluster_kmeans(metric, databrut, k_ref) :
     tps2 = time.time() 
     
     plt.scatter(f0 , f1, c=saved_labels[nb_cluster] , s=8)
-    plt.title("Donnees apres clustering Kmeans") 
+    plt.title("Donnees apres clustering Kmeans avec k="+str(nb_cluster)) 
     plt.show()
     
     print("temps d'éxécution : ", round((tps2 - tps1)*1000,2))

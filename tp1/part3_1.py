@@ -76,20 +76,20 @@ def search_cluster_agglomeratif(method,databrut, k_ref) :
     # Le code ci-dessous permet d’afficher un dendrogramme (il y a d’autres possibilités ...) avec la méthode d’agglomération de clusters single
     # Donnees dans datanp 
     
-    print ("Dendrogramme ", method," donnees initiales ") 
+    # print ("Dendrogramme ", method," donnees initiales ") 
 
-    linked_mat = shc.linkage(datanp , method) 
+    # linked_mat = shc.linkage(datanp , method) 
 
-    plt.figure( figsize =(12, 12)) 
-    shc.dendrogram(linked_mat , orientation='top' , distance_sort='descending' , show_leaf_counts=False) 
-    plt.show()
+    # plt.figure( figsize =(12, 12)) 
+    # shc.dendrogram(linked_mat , orientation='top' , distance_sort='descending' , show_leaf_counts=False) 
+    # plt.show()
     
     tps1 = time.time() 
     coefs = [99.0,99.0]
     saved_labels =[[],[]]
     
     ##On fait varier le nombre de cluster k 
-    for k in range(2,15):
+    for k in range(2,25):
         
         model= cluster.AgglomerativeClustering(linkage=method, n_clusters=k)
         model= model.fit(datanp)
@@ -110,7 +110,7 @@ def search_cluster_agglomeratif(method,databrut, k_ref) :
     tps2=time.time()
     plt.scatter(f0 , f1, c=saved_labels[nb_cluster] , s=8)
     
-    plt.title("Donnees apres clustering agglomeratif distance , method : "+method) 
+    plt.title("Donnees apres clustering agglomeratif distance , method : "+method+" avec k="+str(nb_cluster)) 
     plt.show()
     
     

@@ -108,8 +108,8 @@ def search_cluster_v2(databrut, k_ref) :
     
     f0 = [f[0] for f in datanp]
     f1 = [f[1] for f in datanp]
-    plt.scatter(f0 , f1,s=8) 
-    plt.show()
+    # plt.scatter(f0 , f1,s=8) 
+    # plt.show()
     
     
     
@@ -193,8 +193,8 @@ def cluster_hdbscan (databrut,k_ref):
     
     f0 = [f[0] for f in datanp]
     f1 = [f[1] for f in datanp]
-    plt.scatter(f0 , f1,s=8) 
-    plt.show()
+    # plt.scatter(f0 , f1,s=8) 
+    # plt.show()
     
     
     for m in range(2,10):
@@ -228,16 +228,16 @@ def cluster_hdbscan (databrut,k_ref):
 
 ## 4.2
 #databrut4 = arff.loadarff(open(path+"disk-4600n.arff",'r'))
-databrut5 = arff.loadarff(open(path+"zelnik3.arff",'r'))
+#databrut5 = arff.loadarff(open(path+"zelnik3.arff",'r'))
 #search_cluster_v2(databrut4, 2)
-search_cluster_v2(databrut5, 3)
+#search_cluster_v2(databrut5, 3)
 #sur ces deux  jeu de données on remarqueU'ON NE TROUVE PAS LE BON NOMBRE DE CLUSTER AVEC LA MÉTHODE 
 
-print("----------------------------------")
+#print("----------------------------------")
 
 #databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
 #labels_hdbscan= cluster_hdbscan(databrut4, 3) 
-labels_hdbscan= cluster_hdbscan(databrut5, 3) 
+#labels_hdbscan= cluster_hdbscan(databrut5, 3) 
 
 #print("rand_score entre la méthode DBSCAN et la méthode HDBSCAN",rand_score(labels_dbscan, labels_hdbscan))
 
