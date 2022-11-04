@@ -154,6 +154,8 @@ def search_cluster_v2(databrut, k_ref) :
             tps2 = time.time() 
             labels = model.labels_ 
             
+            print("temps d'éxécution DBSCAN pour ep=", str(e), " et m=" , str(m) , ": ", round((tps2 - tps1)*1000,2))
+            
             plt.scatter(f0, f1, c=labels, s=8)
             plt.title("Donnees apres clusturing DBSCAN pour eps=" +str(e)+ " et m=" + str(m))
             plt.show()
@@ -204,6 +206,8 @@ def cluster_hdbscan (databrut,k_ref):
         model.fit(datanp)
         tps2 = time.time()
         labels = model.labels_ 
+        
+        print("temps d'éxécution apres clusturing HDBSCAN pour m=", str(m) , ": ", round((tps2 - tps1)*1000,2))
                 
         plt.scatter(f0, f1, c=labels, s=8)
         plt.title("Donnees apres clusturing HDBSCAN pour m=" + str(m))
@@ -212,16 +216,13 @@ def cluster_hdbscan (databrut,k_ref):
     
     return(labels)
     
-# comparer sur des données de forme quelconques ou bruitées
-# silhouette ne va pas marcher sur ces données
-# comparer avec les plot
 
 #search_cluster_v2(databrut2, 3)
 
 #print("Méthode DBSCAN")
-#databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
 #databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
-#labels_dbscan= search_cluster_v2(databrut4, 3)
+labels_dbscan= search_cluster_v2(databrut4, 3)
 # search_cluster_v2(databrut5, 3)
 # search_cluster_v2(databrut5, 3)
 
@@ -233,10 +234,10 @@ def cluster_hdbscan (databrut,k_ref):
 #search_cluster_v2(databrut5, 3)
 #sur ces deux  jeu de données on remarqueU'ON NE TROUVE PAS LE BON NOMBRE DE CLUSTER AVEC LA MÉTHODE 
 
-#print("----------------------------------")
+print("----------------------------------")
 
 #databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
-#labels_hdbscan= cluster_hdbscan(databrut4, 3) 
+labels_hdbscan= cluster_hdbscan(databrut4, 3) 
 #labels_hdbscan= cluster_hdbscan(databrut5, 3) 
 
 #print("rand_score entre la méthode DBSCAN et la méthode HDBSCAN",rand_score(labels_dbscan, labels_hdbscan))
