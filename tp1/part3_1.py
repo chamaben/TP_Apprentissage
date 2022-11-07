@@ -91,6 +91,10 @@ def search_cluster_agglomeratif(method,databrut, k_ref) :
     ##On fait varier le nombre de cluster k 
     for k in range(2,25):
         
+        
+        
+        tps1_k = time.time()
+        
         model= cluster.AgglomerativeClustering(linkage=method, n_clusters=k)
         model= model.fit(datanp)
 
@@ -99,6 +103,9 @@ def search_cluster_agglomeratif(method,databrut, k_ref) :
         
         coefs.append(abs(metrics.silhouette_score(datanp, labels)-1)) 
         
+        tps2_k = time.time()
+        print("temps d'éxécution apres clusturing Agglomeratif pour k=", str(k) , ": ", round((tps2_k - tps1_k)*1000,2))
+              
     
     for i in range(len(coefs)) :
         if coefs[i]==min(coefs):

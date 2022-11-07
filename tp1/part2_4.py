@@ -37,9 +37,17 @@ def search_cluster_kmedoids(search_type,metric, databrut, k_ref) :
        
         if search_type == "euclidian":
             ##labels avec la distance euclidienne
+            
+            
+            tps1_k = time.time()
+        
             distmatrix = euclidean_distances ( datanp )
             fp = kmedoids . fasterpam ( distmatrix , k )
             labels= fp . labels
+            
+            tps2_k = time.time()
+            print("temps d'éxécution apres clusturing Kmedoids pour k=", str(k) , ": ", round((tps2_k - tps1_k)*1000,2))
+                  
             
         elif search_type == "manhattan":
             ##labels avec la distance manhattan
