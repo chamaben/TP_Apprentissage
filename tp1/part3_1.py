@@ -174,4 +174,4 @@ def main():
     print("3-spiral")
     search_cluster_agglomeratif("average",databrut5, 3)
     
-main()
+#main()

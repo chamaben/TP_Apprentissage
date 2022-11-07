@@ -126,4 +126,4 @@ def main():
     #Sur ces deux  jeu de données on remarque 
     #que le nombre de clusters trouvés avec kmeans n'est pas bon
     
-main()    
+#main()    
