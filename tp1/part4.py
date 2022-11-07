@@ -111,7 +111,8 @@ def search_cluster_v2(databrut, k_ref) :
     # plt.scatter(f0 , f1,s=8) 
     # plt.show()
     
-    
+    temps_moyen=0.0
+    n=0.0
     tps1_global = time.time() 
     
     min_c = 99.
@@ -135,7 +136,7 @@ def search_cluster_v2(databrut, k_ref) :
         ##"90-95% des observations qui doivent avoir au moins un voisin dans leur ε-voisinage."
         ##"ε de tel sorte que 90% des observations aient une distance au proche voisin inférieure à ε"
         e= trie[int(len(trie)*0.95)]
-        print(e)
+        print("ep=", str(e))
         plt . title (" Plus proches voisins ")
         plt . plot ( trie ) ;
         plt . show ()
@@ -155,6 +156,8 @@ def search_cluster_v2(databrut, k_ref) :
             tps2 = time.time() 
             labels = model.labels_ 
             
+            temps_moyen += round((tps2 - tps1)*1000,2)
+            n+= 1
             print("temps d'éxécution DBSCAN pour ep=", str(e), " et m=" , str(m) , ": ", round((tps2 - tps1)*1000,2))
             
             plt.scatter(f0, f1, c=labels, s=8)
@@ -190,12 +193,16 @@ def search_cluster_v2(databrut, k_ref) :
     # on voit bien que la metric silhouette ne donne pas le bon résultat (exemple databrut5)
     plt.show()
     
-    return(labels, round((tps2_global - tps1_global)*1000,2))
+    return(labels)
+    
     
 
 def cluster_hdbscan (databrut,k_ref):
     
     datanp =  [[x[0],x[1]] for x in databrut[0]]
+    
+    temps_moyen=0.0
+    n=0.0
     
     f0 = [f[0] for f in datanp]
     f1 = [f[1] for f in datanp]
@@ -212,39 +219,41 @@ def cluster_hdbscan (databrut,k_ref):
         tps2 = time.time()
         labels = model.labels_ 
         
+        temps_moyen += round((tps2 - tps1)*1000,2)
+        n+= 1
         print("temps d'éxécution apres clusturing HDBSCAN pour m=", str(m) , ": ", round((tps2 - tps1)*1000,2))
                 
         plt.scatter(f0, f1, c=labels, s=8)
         plt.title("Donnees apres clusturing HDBSCAN pour m=" + str(m))
         plt.show()
 
-    tps2_global = time.time() 
     
-    return(labels, round((tps2_global - tps1_global)*1000,2) )
+    return(labels)
     
 
-def main ():
-    
-    print("Méthode DBSCAN")
-    databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
-    databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
-    labels_dbscan, t_dbscan = search_cluster_v2(databrut4, 3)
-    search_cluster_v2(databrut5, 3)
-    search_cluster_v2(databrut5, 3)
-    
-    
-    # 4.2
-    databrut4 = arff.loadarff(open(path+"disk-4600n.arff",'r'))
-    databrut5 = arff.loadarff(open(path+"zelnik3.arff",'r'))
-    search_cluster_v2(databrut4, 2)
-    search_cluster_v2(databrut5, 3)
-    
-    print("----------------------------------")
-    
-    databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
-    labels_hdbscan, t_hdbscan = cluster_hdbscan(databrut4, 3) 
-    labels_hdbscan= cluster_hdbscan(databrut5, 3) 
-    
-    print("rand_score entre la méthode DBSCAN et la méthode HDBSCAN",rand_score(labels_dbscan, labels_hdbscan))
+#search_cluster_v2(databrut2, 3)
+
+#print("Méthode DBSCAN")
+databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+#databrut5 = arff.loadarff(open(path+"3-spiral.arff",'r'))
+labels_dbscan= search_cluster_v2(databrut4, 3)
+# search_cluster_v2(databrut5, 3)
+# search_cluster_v2(databrut5, 3)
+
+
+## 4.2
+#databrut4 = arff.loadarff(open(path+"disk-4600n.arff",'r'))
+#databrut5 = arff.loadarff(open(path+"zelnik3.arff",'r'))
+#search_cluster_v2(databrut4, 2)
+#search_cluster_v2(databrut5, 3)
+#sur ces deux  jeu de données on remarqueU'ON NE TROUVE PAS LE BON NOMBRE DE CLUSTER AVEC LA MÉTHODE 
+
+print("----------------------------------")
+
+#databrut4 = arff.loadarff(open(path+"compound.arff",'r'))
+labels_hdbscan= cluster_hdbscan(databrut4, 3) 
+#labels_hdbscan= cluster_hdbscan(databrut5, 3) 
+
+#print("rand_score entre la méthode DBSCAN et la méthode HDBSCAN",rand_score(labels_dbscan, labels_hdbscan))
 
 #main()

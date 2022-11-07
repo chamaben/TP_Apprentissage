@@ -76,13 +76,13 @@ def search_cluster_agglomeratif(method,databrut, k_ref) :
     # Le code ci-dessous permet d’afficher un dendrogramme (il y a d’autres possibilités ...) avec la méthode d’agglomération de clusters single
     # Donnees dans datanp 
     
-    # print ("Dendrogramme ", method," donnees initiales ") 
+    print ("Dendrogramme ", method," donnees initiales ") 
 
-    # linked_mat = shc.linkage(datanp , method) 
+    linked_mat = shc.linkage(datanp , method) 
 
-    # plt.figure( figsize =(12, 12)) 
-    # shc.dendrogram(linked_mat , orientation='top' , distance_sort='descending' , show_leaf_counts=False) 
-    # plt.show()
+    plt.figure( figsize =(12, 12)) 
+    shc.dendrogram(linked_mat , orientation='top' , distance_sort='descending' , show_leaf_counts=False) 
+    plt.show()
     
     tps1 = time.time() 
     coefs = [99.0,99.0]
@@ -174,4 +174,4 @@ def main():
     print("3-spiral")
     search_cluster_agglomeratif("average",databrut5, 3)
     
-#main()
+main()
